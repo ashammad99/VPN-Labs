@@ -1,0 +1,48 @@
+R1
+1- ACL:
+access-list 110 permit ip 192.168.1.0 0.0.0.255 192.168.5.0 0.0.0.255 
+2- IKE-Phase1
+	crypto isakmp policy 10
+	authentication pre-share
+	encryption aes
+	hash md5
+	group 5
+	exit
+	crypto isakmp key cisco123 address 192.168.4.1
+3- IKE-Phase2
+	crypto ipsec transform-set MYSET2 esp-aes esp-sha-hmac
+4- Create Cryptomap:
+	crypto map MYMAP2 10 ipsec-isakmp
+	set peer 192.168.4.1
+	set transform-set MYSET2
+	match address 110
+5- Apply Cryptomap on Interface
+int s0/0/1
+	crypto map MYMAP2
+
+
+
+
+R3:
+1- ACL:
+access-list 110 permit ip 192.168.5.0 0.0.0.255 192.168.1.0 0.0.0.255 
+2- IKE-Phase1
+	crypto isakmp policy 10
+	authentication pre-share
+	encryption aes
+	hash md5
+	group 5
+	exit
+	crypto isakmp key cisco123 address 192.168.2.1
+3- IKE-Phase2
+	crypto ipsec transform-set MYSET2 esp-aes esp-sha-hmac
+4- Create Cryptomap:
+	crypto map MYMAP2 10 ipsec-isakmp
+	set peer 192.168.2.1
+	set transform-set MYSET2
+	match address 110
+5- Apply Cryptomap on Interface
+int s0/0/1
+	crypto map MYMAP2
+
+	

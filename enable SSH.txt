@@ -1,0 +1,6 @@
+ip domain-name ccq.edu
+crypto key generate rsa
+
+line vty 0 4
+login auth default
+transport input ssh
